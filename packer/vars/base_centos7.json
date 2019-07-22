@@ -1,0 +1,13 @@
+{
+  "location": "eu-west-1",
+  "version": "1",
+
+  "source_image_id": "ami-0ff760d16d9497662",
+  "target_ami_description": "Centos 7 AMI containing devops tools",
+
+  "vm_type": "t2.medium",
+
+  "os_version": "centos7",
+  "os_user": "centos"
+
+}

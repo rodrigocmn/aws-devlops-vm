@@ -1,0 +1,30 @@
+
+# Packer's puppet-masterless module folder
+moduledir '/tmp/packer-puppet-masterless/module-0'
+
+# Modules to support tools installation
+mod 'puppetlabs-stdlib', '6.0.0'
+mod 'rehan-wget', '1.3.3'
+mod 'puppet-archive', '4.1.0'
+
+# Oh-My_Zsh
+mod 'rehan-ohmyzsh', '2.1.2'
+mod 'puppetlabs-vcsrepo', '2.4.0'
+
+# EPEL package repo
+# mod 'stahnma-epel', '1.3.1'
+mod 'eyp-epel', '3.14.159'
+
+# Python (currently using a forked version to fix Pip installation for Centos 7)
+mod 'puppet-python', '3.0.1'
+# mod 'puppet-python',
+#   :git    => 'https://github.com/rodrigocmn/puppet-python',
+#   :branch => 'centos_pip_fix'
+
+
+# AWS CLI
+mod 'jdowning-awscli', '2.1.0'
+
+# Packer
+mod 'counsyl-sys', '0.9.23'
+mod 'counsyl-packer', '0.9.19'

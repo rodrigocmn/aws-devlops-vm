@@ -1,0 +1,75 @@
+{
+  "variables": {
+
+    "version": "",
+
+    "location": "",
+
+    "source_image_id": "",
+    "target_image_name": "AWS-DevOps-tools2-{{isotime \"2006-01-02\"}}",
+    "target_ami_description": "",
+
+    "vm_type": "",
+
+    "os_version": "",
+    "os_user": "",
+
+    "puppet_root": "../puppet",
+
+    "vpc": "vpc-65817700",
+    "subnet": "subnet-a473a4c1"
+
+  },
+  "builders": [{
+    "name": "AWS DevOps Client Tools AMI Builder",
+    "type": "amazon-ebs",
+    "region": "{{user `location`}}",
+    "source_ami": "{{user `source_image_id`}}",
+    "instance_type": "{{user `vm_type`}}",
+    "ssh_username": "{{user `os_user`}}",
+    "ami_name": "{{user `target_image_name` | clean_ami_name}}",
+    "tags": {
+      "Name": "{{user `target_image_name`}}",
+      "OS_Version": "{{user `os_version`}}",
+      "Release": "Latest",
+      "Base_AMI_Name": "{{ .SourceAMIName }}"
+    },
+    "run_tags": {
+      "Name": "{{user `target_image_name`}}"
+    },
+    "run_volume_tags": {
+      "Name": "{{user `target_image_name`}}"
+    },
+    "snapshot_tags": {
+      "Name": "{{user `target_image_name`}}"
+    },
+    "ami_description": "{{user `target_ami_description`}}",
+    "associate_public_ip_address": "true",
+    "vpc_id": "{{user `vpc`}}",
+    "subnet_id": "{{user `subnet`}}"
+  }],
+
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "script_files/awsdevops_{{user `os_version`}}.sh"
+    },
+    {
+      "type": "file",
+      "source": "config_files",
+      "destination": "/tmp/"
+    },
+    {
+      "type": "file",
+      "source": "{{user `puppet_root`}}/Puppetfile",
+      "destination": "/tmp/packer-puppet-masterless/Puppetfile"
+    },
+    {
+      "type": "puppet-masterless",
+      "manifest_file": "{{user `puppet_root`}}/manifests/site.pp",
+      "puppet_bin_dir": "/opt/puppetlabs/bin",
+      "module_paths": ["{{user `puppet_root`}}/modules"],
+      "execute_command": "r10k puppetfile install --puppetfile /tmp/packer-puppet-masterless/Puppetfile --moduledir /tmp/packer-puppet-masterless/module-0 --verbose && sudo -E /opt/puppetlabs/bin/puppet apply  --verbose --modulepath=/tmp/packer-puppet-masterless/module-0 {{.ManifestFile}}"
+    }
+  ]
+}

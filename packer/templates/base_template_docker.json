@@ -1,0 +1,23 @@
+{
+  "builders":[{
+    "type": "docker",
+    "image": "centos",
+    "export_path": "image.tar"
+  }],
+  "provisioners":[
+    {
+      "type": "shell",
+      "script": "files/base/base_centos7.sh",
+      "remote_folder": "/tmp"
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "type": "docker-import",
+        "repository": "rodrigocmn/centos-puppet-base",
+        "tag": "0.2"
+      }
+    ]
+  ]
+}
